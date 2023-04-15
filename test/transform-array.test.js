@@ -85,7 +85,8 @@ describe('Transform array', () => {
 
             Object.values(cases).forEach(currCase => {
                 const { input, output } = currCase;
-                assert.deepStrictEqual(transform(input), output);
+                assert.
+                deepStrictEqual(transform(input), output);
             });
         });
 
