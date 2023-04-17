@@ -14,14 +14,77 @@ const { NotImplementedError } = require('../extensions/index.js');
 class VigenereCipheringMachine {
   constructor(type) {
     this.type = type === false ? 'reverseMachine' : 'directMachine';
+  };
+
+  crypt(text, key, dest) {    
+    text = text.toUpperCase();
+    key = key.toUpperCase();
+
+    let keys = ""
+    while (keys.length < text.length) {
+      keys += key;
+    };
+
+    
+    let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";       
+    let arrLetters = [];    
+    for (let s of text) {
+      if (letters.includes(s)) {
+        arrLetters.push(letters.indexOf(s));
+      } else {
+        arrLetters.push(s);         
+      }      
+    };
+
+    let arrKeys = [];
+    for (let s of keys) {
+      arrKeys.push(letters.indexOf(s));
+    };
+
+    let arrTotal = [];
+    let num;
+    let dif = 0;
+    if (dest === 'encrypt') {
+      for (let i = 0; i < text.length; i++) {
+        if (typeof arrLetters[i] === 'number' && arrLetters[i] < 26) {
+          num = arrLetters[i] + arrKeys[i - dif];
+          arrTotal.push(num > 25 ? num % 26 : num);
+        } else {
+          arrTotal.push(arrLetters[i]);
+          dif += 1;
+        }  
+      }
+    } else {
+      for (let i = 0; i < text.length; i++) {
+        if (typeof arrLetters[i] === 'number' && arrLetters[i] < 26) {
+          num = arrLetters[i] - arrKeys[i - dif];
+          arrTotal.push(num < 0 ? num + 26 : num);
+        } else {
+          arrTotal.push(arrLetters[i]);
+          dif += 1;
+        }  
+      }
+    }
+
+
+
+    let total = "";
+    for (let ind of arrTotal) {      
+      if (typeof ind === 'number' && ind < 26) {
+        total += letters[ind];
+      } else {
+        total += ind;
+      }
+    }
+    return total;
   }
 
   encrypt(message, key) {
     if (!message || !key) {
       throw new Error('Incorrect arguments!');
     };
-    
-    return message = this.type === 'directMachine' ? message.toUpperCase() : message.toUpperCase().split("").reverse().join(""); 
+    message = this.crypt(message, key, 'encrypt');
+    return message = this.type === 'directMachine' ? message : message.split("").reverse().join(""); 
     
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
@@ -31,7 +94,8 @@ class VigenereCipheringMachine {
     if (!encryptedMessage || !key) {
       throw new Error('Incorrect arguments!');
     };
-    return encryptedMessage = this.type === 'directMachine' ? encryptedMessage.toUpperCase() : encryptedMessage.toUpperCase().split("").reverse().join(""); 
+    encryptedMessage = this.crypt(encryptedMessage, key);
+    return encryptedMessage = this.type === 'directMachine' ? encryptedMessage : encryptedMessage.split("").reverse().join(""); 
     
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
