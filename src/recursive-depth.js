@@ -20,16 +20,17 @@ class DepthCalculator {
   calculateDepth(arrays) { 
     throw new NotImplementedError('Not implemented');
     /*
-    ++this.count;
     if (!arrays) {
       return this.count;
-    };    
+    };  
+    ++this.count;  
     for (let array of arrays) {
       if (Array.isArray(array)) {
       return super.calculateDepth(array);
       };
-    };*/
+    };
     return this.count;    
+    */
   }
 }
 
